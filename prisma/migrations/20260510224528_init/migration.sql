@@ -4,12 +4,13 @@ CREATE TABLE `Users` (
     `fname` VARCHAR(191) NOT NULL,
     `oname` VARCHAR(191) NULL,
     `lname` VARCHAR(191) NOT NULL,
-    `sex` VARCHAR(191) NOT NULL,
+    `sex` ENUM('Male', 'Female') NOT NULL,
     `phone` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `country_id` INTEGER NOT NULL,
-    `state_id` INTEGER NOT NULL,
-    `lga_id` INTEGER NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
+    `country_id` INTEGER NULL,
+    `state_id` INTEGER NULL,
+    `lga_id` INTEGER NULL,
     `address` VARCHAR(191) NOT NULL,
     `role_id` INTEGER NOT NULL,
     `status_id` INTEGER NOT NULL,
@@ -93,29 +94,11 @@ CREATE TABLE `Media` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Countries` (
+CREATE TABLE `Locations` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `code` VARCHAR(191) NULL,
-
-    UNIQUE INDEX `Countries_name_key`(`name`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `States` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
-    `country_id` INTEGER NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `LGAs` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
-    `state_id` INTEGER NOT NULL,
+    `type` VARCHAR(191) NOT NULL,
+    `parent_id` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -151,13 +134,13 @@ ALTER TABLE `Users` ADD CONSTRAINT `Users_role_id_fkey` FOREIGN KEY (`role_id`) 
 ALTER TABLE `Users` ADD CONSTRAINT `Users_status_id_fkey` FOREIGN KEY (`status_id`) REFERENCES `Statuses`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Users` ADD CONSTRAINT `Users_country_id_fkey` FOREIGN KEY (`country_id`) REFERENCES `Countries`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Users` ADD CONSTRAINT `Users_country_id_fkey` FOREIGN KEY (`country_id`) REFERENCES `Locations`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Users` ADD CONSTRAINT `Users_state_id_fkey` FOREIGN KEY (`state_id`) REFERENCES `States`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Users` ADD CONSTRAINT `Users_state_id_fkey` FOREIGN KEY (`state_id`) REFERENCES `Locations`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Users` ADD CONSTRAINT `Users_lga_id_fkey` FOREIGN KEY (`lga_id`) REFERENCES `LGAs`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Users` ADD CONSTRAINT `Users_lga_id_fkey` FOREIGN KEY (`lga_id`) REFERENCES `Locations`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Posts` ADD CONSTRAINT `Posts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `Users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -187,7 +170,4 @@ ALTER TABLE `Reactions` ADD CONSTRAINT `Reactions_post_id_fkey` FOREIGN KEY (`po
 ALTER TABLE `Reactions` ADD CONSTRAINT `Reactions_comment_id_fkey` FOREIGN KEY (`comment_id`) REFERENCES `Comments`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `States` ADD CONSTRAINT `States_country_id_fkey` FOREIGN KEY (`country_id`) REFERENCES `Countries`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `LGAs` ADD CONSTRAINT `LGAs_state_id_fkey` FOREIGN KEY (`state_id`) REFERENCES `States`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Locations` ADD CONSTRAINT `Locations_parent_id_fkey` FOREIGN KEY (`parent_id`) REFERENCES `Locations`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

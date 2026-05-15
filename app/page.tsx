@@ -1,5 +1,9 @@
 "use client";
+
+import { columns, DataTable } from "@/components/DataTable";
+import { EntityForm } from "@/components/forms/EntityForm";
 import PayslipTable from "@/components/PaySlip";
+import { entityConfig } from "@/config/entities";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -12,6 +16,13 @@ type Status = {
   createdAt: string;
 };
 
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};
+
 export default function Home() {
   const [statuses, setStatuses] = useState<Status[]>([]);
   const [name, setName] = useState("");
@@ -21,39 +32,6 @@ export default function Home() {
   const router = useRouter();
   const params = useParams();
   const id = Number(params?.id);
-
-  const [status, setStatus] = useState<Status | null>(null);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  async function fetchPosts() {
-    const res = await fetch("/api/statuses");
-    const data = await res.json();
-    setStatuses(data);
-  }
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  async function handleCreate(e: FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    await fetch("/api/statuses", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, description }),
-    });
-    setName("");
-    setDescription("");
-    await fetchPosts();
-    setLoading(false);
-  }
-
-  async function handleDelete(id: number) {
-    await fetch(`/api/statuses/${id}`, { method: "DELETE" });
-    await fetchPosts();
-  }
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -68,36 +46,6 @@ export default function Home() {
           </Link>
 
           {/* <PayslipTable /> */}
-
-          <form onSubmit={handleCreate} className="flex w-full flex-col gap-4">
-            <div>
-              <label className="mb-1 block text-sm font-medium">Name</label>
-              <input
-                className="w-full rounded border px-3 py-2 text-sm"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm font-medium">
-                Description
-              </label>
-              <textarea
-                className="w-full rounded border px-3 py-2 text-sm"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-            <button
-              className="w-full rounded bg-foreground px-3 py-2 text-sm text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc]"
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? "Creating..." : "Create Status"}
-            </button>
-          </form>
 
           <ul className="space-y-3">
             {statuses.map((status) => (
@@ -118,10 +66,7 @@ export default function Home() {
                   >
                     Edit
                   </a>
-                  <button
-                    onClick={() => handleDelete(status.id)}
-                    className="text-sm text-red-600 hover:underline"
-                  >
+                  <button className="text-sm text-red-600 hover:underline">
                     Delete
                   </button>
                 </div>

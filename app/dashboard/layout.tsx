@@ -84,7 +84,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 mt-16 md:mt-0">
+      <main className="flex-1 mt-16 md:mt-0 overflow-auto">
         <nav className="flex justify-between items-center px-3 bg-se5 py-2 mb-4">
           <p className="text-sm md:text-2xl md:font-semibold text-pr1">
             {capitalize(breadcrumb)}
@@ -109,12 +109,7 @@ const menu = [
     icon: <Users size={18} />,
     roles: ["developer", "admin"],
   },
-  {
-    name: "Add User",
-    href: "/dashboard/users/create",
-    icon: <UserPlus size={18} />,
-    roles: ["developer", "admin"],
-  },
+
   {
     name: "Posts",
     href: "/dashboard/posts",
@@ -143,12 +138,6 @@ const menu = [
     name: "Settings",
     href: "/dashboard/settings",
     icon: <Settings size={18} />,
-    roles: ["developer", "admin"],
-  },
-  {
-    name: "Logout",
-    href: "/dashboard/logout",
-    icon: <Power size={18} />,
     roles: ["developer", "admin"],
   },
 ];

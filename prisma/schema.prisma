@@ -18,13 +18,15 @@ model Users {
   fname       String
   oname       String?
   lname       String
-  sex         String
+  sex         Sex
   phone       String    @unique
   email       String    @unique
 
-  country_id  Int
-  state_id    Int
-  lga_id      Int
+  password  String
+
+  country_id Int?
+  state_id   Int?
+  lga_id     Int?
 
   address     String
   role_id     Int
@@ -36,14 +38,19 @@ model Users {
   role        Roles      @relation(fields: [role_id], references: [id])
   status      Statuses     @relation(fields: [status_id], references: [id])
 
-  country     Countries    @relation(fields: [country_id], references: [id])
-  state       States      @relation(fields: [state_id], references: [id])
-  lga         LGAs        @relation(fields: [lga_id], references: [id])
-
+  country    Locations? @relation("UserCountry", fields: [country_id], references: [id])
+  state      Locations? @relation("UserState", fields: [state_id], references: [id])
+  lga        Locations? @relation("UserLga", fields: [lga_id], references: [id])
+  
   posts       Posts[]
   comments    Comments[]
   shares      Shares[]
   reactions   Reactions[]
+}
+
+enum Sex {
+  Male
+  Female
 }
 
 model Posts {
@@ -127,31 +134,20 @@ model Media {
   updated_at   DateTime @updatedAt
 }
 
-model Countries {
+model Locations {
   id        Int      @id @default(autoincrement())
-  name      String   @unique
-  code      String?  // NG, UK, US, etc.
-  states    States[]
-  users     Users[]
-}
+  name      String
 
-model States {
-  id         Int      @id @default(autoincrement())
-  name       String
-  country_id Int
+  type      String   // country, state, province, lga, city, etc.
 
-  country    Countries  @relation(fields: [country_id], references: [id])
-  lgas       LGAs[]
-  users      Users[]
-}
+  parent_id Int?
+  parent    Locations? @relation("LocationTree", fields: [parent_id], references: [id])
 
-model LGAs {
-  id       Int      @id @default(autoincrement())
-  name     String
-  state_id Int
+  children  Locations[] @relation("LocationTree")
 
-  state    States    @relation(fields: [state_id], references: [id])
-  users    Users[]
+  country_users Users[] @relation("UserCountry")
+  state_users   Users[] @relation("UserState")
+  lga_users     Users[] @relation("UserLga")
 }
 
 model Roles {

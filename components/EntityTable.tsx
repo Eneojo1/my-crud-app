@@ -6,11 +6,18 @@ import Loading from "./Loading";
 type Props = {
   title: string;
   endpoint: string;
+  fields: any[];
   onEdit?: (item: any) => void;
   onAdd?: () => void;
 };
 
-const EntityTable = ({ title, endpoint, onEdit, onAdd }: Props) => {
+export default function EntityTable({
+  title,
+  endpoint,
+  fields,
+  onEdit,
+  onAdd,
+}: Props) {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -60,11 +67,16 @@ const EntityTable = ({ title, endpoint, onEdit, onAdd }: Props) => {
 
   if (data.length === 0) {
     return (
-      <div className="flex items-center justify-center h-[50vh]">
+      <div className="flex flex-col space-y-1 items-center justify-center h-[50vh]">
         <p>No {pluralize(title.toLowerCase())} found.</p>
+        <button onClick={onAdd} className="bg-pr2 text-white px-3 py-1 rounded">
+          + Add {title}
+        </button>
       </div>
     );
   }
+
+  const tableFields = fields.filter((field) => field.table === true);
 
   return (
     <div className="h-[50vh]">
@@ -84,8 +96,11 @@ const EntityTable = ({ title, endpoint, onEdit, onAdd }: Props) => {
           <thead className="bg-pr1 text-white sticky top-0 z-10">
             <tr>
               <th className="py-3">SN</th>
-              <th>Name</th>
-              <th>Description</th>
+              {tableFields.map((field) => (
+                <th key={field.name} className="px-3 py-3 text-left">
+                  {field.label}
+                </th>
+              ))}
               <th>Created</th>
               <th>Updated</th>
               <th>Action</th>
@@ -95,8 +110,11 @@ const EntityTable = ({ title, endpoint, onEdit, onAdd }: Props) => {
             {data.map((item, idx) => (
               <tr key={idx} className="odd:bg-white even:bg-gray-100 border-b">
                 <td className="px-3 py-2">{idx + 1}</td>
-                <td className="px-3">{item.name}</td>
-                <td className="px-3">{item.description}</td>
+                {tableFields.map((field) => (
+                  <td key={field.name} className="px-3 py-2">
+                    {renderCell(item, field)}
+                  </td>
+                ))}
                 <td className="px-3">
                   {new Date(item.created_at).toLocaleDateString()}
                 </td>
@@ -127,6 +145,25 @@ const EntityTable = ({ title, endpoint, onEdit, onAdd }: Props) => {
       </div>
     </div>
   );
-};
+}
 
-export default EntityTable;
+const renderCell = (item: any, field: any) => {
+  const value = item[field.name];
+
+  // relation object
+  if (typeof value === "object" && value !== null) {
+    return value.name || value.title || JSON.stringify(value);
+  }
+
+  // group object
+  if (field.type === "group") {
+    return Object.values(value || {}).join(", ");
+  }
+
+  // textarea shortening
+  if (typeof value === "string" && value.length > 50) {
+    return value.slice(0, 50) + "...";
+  }
+
+  return value?.toString() || "-";
+};
