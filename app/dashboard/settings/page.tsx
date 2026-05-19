@@ -3,17 +3,7 @@
 import { EntityForm } from "@/components/forms/EntityForm";
 import Modal from "@/components/Modal";
 import { entityConfig } from "@/config/entities";
-import {
-  Flag,
-  FlagIcon,
-  Folder,
-  Image,
-  LucideIcon,
-  MapPin,
-  ShieldCheck,
-  Tag,
-  Users,
-} from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import EntityTable from "@/components/tables/EntityTable";

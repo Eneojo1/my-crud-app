@@ -2,23 +2,15 @@
 
 import React, { useState } from "react";
 import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowRight,
-  ArrowUp,
   BarChart,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
-  ChevronUp,
   FileText,
   LayoutDashboard,
   Mail,
-  Menu,
   Power,
   Settings,
   SquarePlus,
-  UserPlus,
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -38,7 +30,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <section className="flex">
+    <section className="flex bg-se5">
       {/* Mobile Header */}
       <div
         className={`
@@ -69,7 +61,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <Link
                 key={idx}
                 href={item.href}
-                className={`${active ? "bg-pr2" : ""} flex gap-2 px-7 py-2 hover:bg-pr2 transition`}
+                className={`${active ? "bg-se2" : ""} flex gap-2 px-7 py-2 hover:bg-se2 transition`}
               >
                 {item.icon}
                 {item.name}
@@ -86,7 +78,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main content */}
       <main className="flex-1 mt-16 md:mt-0 overflow-auto">
         <nav className="flex justify-between items-center px-3 bg-se5 py-2 mb-4">
-          <p className="text-sm md:text-2xl md:font-semibold text-pr1">
+          <p className="text-sm! md:text-2xl text-pr1">
             {capitalize(breadcrumb)}
           </p>
         </nav>

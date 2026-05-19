@@ -91,7 +91,7 @@ const RelationField = ({
 
   return (
     <div>
-      <label className="block mb-1 text-sm font-medium">{field.label}</label>
+      {/* <label className="block mb-1 text-sm font-medium">{field.label}</label> */}
 
       <select
         value={value || ""}

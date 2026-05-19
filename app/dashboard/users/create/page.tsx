@@ -1,10 +1,11 @@
-import UsersForm from "@/components/forms/UserForm";
-import { users } from "../data";
+import UsersForm from "@/components/forms/userForm/UserForm";
 
-const EditUser = async ({ params }: { params: { id: string } }) => {
-  const { id } = await params;
-  const user = users.find((u) => u.id === Number(id));
-  return <UsersForm initialData={user} />;
+const CreateUser = async () => {
+  return (
+    <div className="px-6">
+      <UsersForm />
+    </div>
+  );
 };
 
-export default EditUser;
+export default CreateUser;

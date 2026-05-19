@@ -22,7 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { fullName } from "@/shared/utils";
+import { formatDate, fullName } from "@/shared/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex flex-col h-[80vh]">
-      <div className="shrink-0 bg-white pb-3">
+      <div className="shrink-0 bg-white px-2 py-2">
         <DataTableToolbar table={table} />
       </div>
 
@@ -301,11 +301,3 @@ export const columns = ({
     },
   },
 ];
-
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};

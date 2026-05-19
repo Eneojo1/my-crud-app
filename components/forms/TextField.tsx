@@ -28,7 +28,7 @@ export default function TextField({
 
   return (
     <div>
-      <label className="block mb-1 text-sm font-medium">{label}</label>
+      {/* <label className="block mb-1 text-sm font-medium">{label}</label> */}
 
       <div className="relative">
         <input

@@ -73,7 +73,7 @@ const Users = () => {
     <div className="px-4 relative">
       <Link
         href="/dashboard/users/create"
-        className="absolute bg-se2 font-semibold text-sm px-2 py-1 rounded-2xl"
+        className="btn absolute font-semibold text-sm px-2 py-1 left-5 top-2"
       >
         Add New User
       </Link>

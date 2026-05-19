@@ -88,6 +88,56 @@ body {
   margin: 0;
 }
 
+header {
+  @apply fixed top-0 w-full bg-se3 text-lg px-3 sm:px-8 py-3 text-se4 flex 
+  justify-between items-center shadow-[0_4px_6px_rgba(213,250,1,0.831)] z-50;
+}
+
+.nav-tab {
+  @apply cursor-pointer hover:text-se2 transition duration-200;
+}
+
+.nav-tab::after {
+  @apply content-[''] block bg-se1 h-0.5 w-0 transition-all duration-300;
+}
+
+.nav-tab:hover::after {
+  @apply w-full;
+}
+
+.active {
+  @apply text-se1 font-semibold;
+}
+
+.active::after {
+  @apply w-full;
+}
+
+.btn {
+  @apply text-se4 font-medium rounded-md cursor-pointer bg-pr2 border
+  transition-colors duration-200 px-4 py-1 text-center shadow-[0_4px_6px_rgba(0,0,0,0.1)]
+  hover:text-pr2 hover:bg-se4 hover:border-pr2;
+}
+
+.btn:active {
+  transform: translateY(2px); /* move down a bit */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* inner shadow */
+}
+
+.btn-gray {
+  @apply bg-se4 text-se6 border-se6
+   hover:bg-se6 hover:text-se4 hover:border-se6;
+}
+
+.btn-red {
+  @apply bg-red-400 text-se4 
+   hover:bg-se4 hover:text-red-400 hover:border-red-400;
+}
+
+.logo {
+  animation: var(--animate-logo);
+}
+
 section {
   @apply min-h-[calc(100vh-var(--spacing-nh))];
 }
@@ -96,9 +146,22 @@ button {
   @apply cursor-pointer;
 }
 
-header {
-  @apply fixed top-0 w-full bg-pr1 text-lg px-3 sm:px-8 py-3 text-se4 flex 
-  justify-between items-center shadow-[0_4px_6px_rgba(213,250,1,0.831)] z-50;
+/* Hide default eye in Edge/IE */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* Hide default eye in Chrome/Edge (WebKit) */
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-clear-button {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* Hide in Safari (macOS/iOS) */
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
 }
 
 .logo {
@@ -167,7 +230,11 @@ header {
   transform: translateX(-50%) translateY(-4px);
 }
 
-/* kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk */
+.step-circle {
+  @apply h-9 w-9 bg-se7 rounded-full flex justify-center items-center relative;
+}
+
+/* kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk */
 
 .payslip table {
   /* @apply border border-[#00ac5b] text-[12px]; */
