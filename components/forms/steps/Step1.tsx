@@ -1,8 +1,8 @@
 import { entityConfig } from "@/config/entities";
-import { Props } from "./UserForm";
-import RelationField from "../RelationField";
-import SelectField from "../SelectField";
-import TextField from "../TextField";
+import { Props } from "../UserForm";
+import RelationField from "../fields/RelationField";
+import SelectField from "../fields/SelectField";
+import TextField from "../fields/TextField";
 
 const Step1 = ({ formData, updateField }: Props) => {
   const gender = entityConfig.users.fields.find((f) => f.name === "sex");

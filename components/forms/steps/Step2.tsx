@@ -1,8 +1,8 @@
 import { entityConfig } from "@/config/entities";
 import { Props } from "./UserForm";
-import RelationField from "../RelationField";
+import RelationField from "../fields/RelationField";
 import { textarea } from "@/shared/utils";
-import TextField from "../TextField";
+import TextField from "../fields/TextField";
 
 const Step2 = ({ formData, updateField }: Props) => {
   const country = entityConfig.users.fields.find(

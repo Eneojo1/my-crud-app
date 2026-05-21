@@ -1,5 +1,6 @@
+"use client";
+
 import { formatDate, fullName } from "@/shared/utils";
-import { users } from "../data";
 import {
   Bell,
   Info,
@@ -11,15 +12,86 @@ import {
   User,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { FaFacebookF, FaGithub, FaTwitter } from "react-icons/fa";
 import { IconType } from "react-icons";
+import { useEffect, useState } from "react";
+import Loading from "@/components/Loading";
+import {
+  FaFacebookF,
+  FaGithub,
+  FaInstagram,
+  FaLinkedin,
+  FaMediumM,
+  FaPinterestP,
+  FaQuora,
+  FaRedditAlien,
+  FaSnapchatGhost,
+  FaTiktok,
+  FaYoutube,
+} from "react-icons/fa";
+import { FaThreads, FaXTwitter } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
-export default async function Profile({ params }: { params: { id: string } }) {
-  const { id } = await params;
-  const user = users.find((u) => u.id === Number(id));
+type SocialConfig = {
+  icon: IconType;
+  color: string;
+};
+
+export default function Profile({ params }: { params: { id: string } }) {
+  const [user, setUser] = useState<any>({});
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  async function fetchData() {
+    const { id } = await params;
+    try {
+      setLoading(true);
+
+      const res = await fetch(`/api/users/${id}`);
+
+      const json = await res.json();
+
+      setUser(json);
+    } catch (err) {
+      console.error(err);
+      setUser({});
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleEdit = () => router.push(`/dashboard/users/edit/${user.id}`);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <Loading />
+      </div>
+    );
+  }
+
   if (!user) {
     return <div>User not found</div>;
   }
+  const socials: Record<string, SocialConfig> = {
+    facebook: { icon: FaFacebookF, color: "text-blue-600" },
+    github: { icon: FaGithub, color: "text-gray-800" },
+    instagram: { icon: FaInstagram, color: "text-pink-500" },
+    linkedin: { icon: FaLinkedin, color: "text-blue-700" },
+    medium: { icon: FaMediumM, color: "text-green-700" },
+    pinterest: { icon: FaPinterestP, color: "text-red-700" },
+    quora: { icon: FaQuora, color: "text-red-700" },
+    reddit: { icon: FaRedditAlien, color: "text-orange-500" },
+    snapchat: { icon: FaSnapchatGhost, color: "text-yellow-400" },
+    threads: { icon: FaThreads, color: "text-black" },
+    tiktok: { icon: FaTiktok, color: "text-black" },
+    twitter: { icon: FaXTwitter, color: "text-black" },
+    x: { icon: FaXTwitter, color: "text-black" },
+    youtube: { icon: FaYoutube, color: "text-red-600" },
+  };
 
   return (
     <div className="flex flex-col gap-1 max-w-5xl mx-auto pb-4 px-6 overflow-hidden">
@@ -44,7 +116,9 @@ export default async function Profile({ params }: { params: { id: string } }) {
         <div className="flex gap-3 justify-between sm:items-center">
           <h3 className="font-bold text-pr1">USER PROFILE</h3>
           <div className="flex gap-3">
-            <button className="btn">Edit User</button>
+            <button className="btn" onClick={handleEdit}>
+              Edit User
+            </button>
             <button className="btn btn-gray">More &#9660;</button>
           </div>
         </div>
@@ -71,7 +145,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
                 <li className="font-bold text-lg">{fullName(user)}</li>
                 <li>
                   <ShieldCheck className="mr-2 text-pr2 h-5 w-5" />
-                  {user.role.name}. {user?.role.description}
+                  {user.role?.name}. {user.role?.description}
                 </li>
                 <li>
                   <Mail className="mr-2 text-pr2 h-5 w-5" />
@@ -90,6 +164,7 @@ export default async function Profile({ params }: { params: { id: string } }) {
 
             <div className="flex flex-col gap-2 text-sm text-se6 m-auto">
               <Item label="User Id" value={String(user.id)} />
+              <Item label="Status" value={String(user.status?.name)} />
               <Item label="Joined" value={formatDate(user.created_at)} />
               <Item label="Last Updated" value={formatDate(user.updated_at)} />
             </div>
@@ -99,81 +174,53 @@ export default async function Profile({ params }: { params: { id: string } }) {
         <div className="flex flex-col lg:flex-row gap-4 px-2 lg:px-4 m-auto">
           <SectionCard title="Personal Information" icon={User}>
             <Item label="First Name" value={user.fname} />
-            <Item label="Other Name" value={user.oname} />
+            <Item label="Other Name" value={user.oname ?? ""} />
             <Item label="Last Name" value={user.lname} />
             <Item label="Gender" value={user.sex} />
             <Item label="Phone" value={user.email} />
           </SectionCard>
 
           <SectionCard title="Location" icon={MapPin}>
-            <Item label="Country" value={String(user.country_id)} />
-            <Item label="State" value={String(user.state_id)} />
-            <Item label="LGA" value={String(user.lga_id)} />
+            <Item label="Country" value={String(user.country?.name)} />
+            <Item label="State" value={String(user.state?.name)} />
+            <Item label="LGA" value={String(user.lga?.name)} />
             <Item label="Address" value={user.address} />
           </SectionCard>
 
           <SectionCard title="Account Information" icon={Info}>
-            <Item label="Role" value={user.role.name} />
-            <Item label="Status" value={user.status.name} />
+            <Item label="Role" value={user.role?.name} />
+            <Item label="Status" value={user.status?.name} />
             <Item label="Joined" value={formatDate(user.created_at)} />
             <Item label="Last Updated" value={formatDate(user.updated_at)} />
           </SectionCard>
         </div>
 
-        <SectionCard title="Socials" icon={Info}>
-          <div className="flex gap-5">
-            <InfoItem
-              icon={FaFacebookF}
-              label="Facebook"
-              value="john@mail.com"
-              href="https://facebook.com/john"
-            />
+        {user.socials.length > 0 && (
+          <SectionCard title="Socials" icon={Info}>
+            <div className="flex gap-5">
+              {user.socials.map((link: string) => {
+                const platform = new URL(link).hostname
+                  .replace("www.", "")
+                  .split(".")[0];
 
-            <InfoItem
-              icon={FaTwitter}
-              label="Twitter"
-              value="john@mail.com"
-              href="https://facebook.com/john"
-            />
+                const social = socials[platform as keyof typeof socials];
+                if (!social) return null;
 
-            <InfoItem
-              icon={FaGithub}
-              label="GitHub"
-              value="github.com/john"
-              href="https://github.com/john"
-            />
-          </div>
-        </SectionCard>
-      </div>
-    </div>
-  );
-}
-
-type InfoItemProps = {
-  icon: LucideIcon | IconType;
-  label: string;
-  value: string;
-  href?: string;
-};
-
-export function InfoItem({ icon: Icon, label, value, href }: InfoItemProps) {
-  return (
-    <div className="flex items-center gap-3">
-      <Icon className="w-7 h-7 text-pr2 rounded-full p-1 border shadow-md transition" />
-
-      <div className="text-se6 text-xs">
-        <p className="font-semibold text-pr1">{label}</p>
-
-        {href ? (
-          <a
-            href={href}
-            target="_blank"
-            className="font-medium hover:underline"
-          >
-            {value}
-          </a>
-        ) : (
-          <p className="font-medium">{value}</p>
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={link}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full border shadow-md transition"
+                  >
+                    <Icon className={`w-7 h-7 p-1 ${social.color}`} />
+                  </a>
+                );
+              })}
+            </div>
+          </SectionCard>
         )}
       </div>
     </div>

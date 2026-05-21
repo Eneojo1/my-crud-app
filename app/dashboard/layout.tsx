@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { capitalize } from "@/shared/utils";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -76,14 +75,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 mt-16 md:mt-0 overflow-auto">
-        <nav className="flex justify-between items-center px-3 bg-se5 py-2 mb-4">
-          <p className="text-sm! md:text-2xl text-pr1">
-            {capitalize(breadcrumb)}
-          </p>
-        </nav>
-        {children}
-      </main>
+      <main className="flex-1 mt-16 md:mt-0 overflow-auto">{children}</main>
     </section>
   );
 }

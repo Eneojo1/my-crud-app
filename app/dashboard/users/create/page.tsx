@@ -1,4 +1,4 @@
-import UsersForm from "@/components/forms/userForm/UserForm";
+import UsersForm from "@/components/forms/UserForm";
 
 const CreateUser = async () => {
   return (

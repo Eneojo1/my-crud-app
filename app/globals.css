@@ -234,6 +234,76 @@ input[type="password"]::-webkit-textfield-decoration-container {
   @apply h-9 w-9 bg-se7 rounded-full flex justify-center items-center relative;
 }
 
+/* Blog */
+.comment {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.avatar {
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  z-index: 2;
+}
+
+.comment:has(> div > div:nth-child(3))::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  background: #ddd;
+  inset: calc(var(--avatar-size) + 2px) auto 0 calc(var(--avatar-size) / 2);
+}
+
+.details > div {
+  position: relative;
+}
+
+.details > div:nth-child(n + 3)::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 2rem;
+  border-bottom-left-radius: 0.7rem;
+  border: solid #ddd;
+  border-width: 0 0 2px 2px;
+  left: calc(var(--avatar-size) / -2 - 8px);
+  top: -18px;
+  z-index: 12;
+}
+
+.details > div:nth-child(n + 3):last-child::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--avatar-size) / -2 - 8px);
+  background: var(--color-se4);
+  bottom: -1.5rem;
+  top: -10px;
+  width: 2px;
+  z-index: 1;
+}
+
+.action-btns {
+  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: start;
+  gap: 16px;
+  margin-left: 12px;
+  margin-top: 2px;
+  color: #747373;
+}
+
+.action-btns svg {
+  width: 20px;
+  height: 20px;
+  &:hover {
+    color: var(--color-pr2);
+  }
+}
+
 /* kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk */
 
 .payslip table {

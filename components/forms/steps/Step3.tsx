@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { Props } from "./UserForm";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Trash2 } from "lucide-react";
+import { Props } from "../UserForm";
 
 const Step3 = ({ formData, updateField }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,8 +46,8 @@ const Step3 = ({ formData, updateField }: Props) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[minmax(180px,250px)_1fr] gap-10 items-start">
-      {/* ===================       AVATAR =================== */}
+    <div className="grid grid-cols-1 md:grid-cols-[minmax(180px,250px)_1fr] gap-10 items-start h-[70vh] overflow-auto pr-5">
+      {/* =================== AVATAR =================== */}
       <div className=" flex flex-col items-center gap-4">
         <div className="relative">
           {formData.avatar ? (
@@ -95,7 +95,7 @@ const Step3 = ({ formData, updateField }: Props) => {
               onChange={(e) => handleSocialChange(i, e.target.value)}
               className=" border rounded p-2 flex-1"
             />
-            {formData.socials.length > 1 && (
+            {formData.socials.length > 0 && (
               <button
                 type="button"
                 onClick={() => removeSocial(i)}

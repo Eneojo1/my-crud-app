@@ -1,9 +1,9 @@
 "use client";
 
-import RelationField from "./RelationField";
-import GroupField from "./GroupField";
-import SelectField from "./SelectField";
-import TextField from "./TextField";
+import RelationField from "./fields/RelationField";
+import GroupField from "./fields/GroupField";
+import SelectField from "./fields/SelectField";
+import TextField from "./fields/TextField";
 import { Field } from "@/type";
 
 /* =========================

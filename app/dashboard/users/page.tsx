@@ -4,8 +4,7 @@ import { columns, DataTable, User } from "@/components/DataTable";
 import { fullName } from "@/shared/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { users } from "./data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,6 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import Loading from "@/components/Loading";
 
 export type TableUser = {
   id: number;
@@ -27,20 +27,34 @@ export type TableUser = {
   created_at: string;
 };
 
-export const tableUsers: TableUser[] = users.map((u) => ({
-  id: u.id,
-  name: fullName(u).trim(),
-  email: u.email,
-  role: u.role?.name || "-",
-  status: u.status?.name || "-",
-  created_at: u.created_at,
-}));
-
 const Users = () => {
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  async function fetchData() {
+    try {
+      setLoading(true);
+
+      const res = await fetch("/api/users");
+
+      const json = await res.json();
+
+      setUsers(json);
+    } catch (err) {
+      console.error(err);
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleDelete = async () => {
     if (!selectedUser) return;
@@ -68,6 +82,14 @@ const Users = () => {
     setOpen(false);
     setSelectedUser(null);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 relative">
@@ -118,43 +140,3 @@ const Users = () => {
 };
 
 export default Users;
-
-// "use client";
-// import { columns, DataTable } from "@/components/DataTable";
-// import { fullName } from "@/shared/utils";
-// import Link from "next/link";
-// import { useEffect, useState } from "react";
-
-// export type TableUser = {
-//   id: number;
-//   name: string;
-//   email: string;
-//   role: string;
-//   status: string;
-//   created_at: string;
-// };
-
-// const Users = () => {
-//   const [users, setUsers] = useState<any[]>([]);
-//   const [loading, setLoading] = useState(true);
-
-// async function fetchData() {
-//   try {
-//     setLoading(true);
-
-//     const res = await fetch("/api/users");
-
-//     const json = await res.json();
-
-//     setUsers(json);
-//   } catch (err) {
-//     console.error(err);
-//     setUsers([]);
-//   } finally {
-//     setLoading(false);
-//   }
-// }
-
-// useEffect(() => {
-//   fetchData();
-// }, []);

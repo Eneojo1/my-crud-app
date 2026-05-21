@@ -1,169 +1,169 @@
 "use client";
 
-import { useState } from "react";
-// import { EntityForm } from "./EntityForm";
 import { entityConfig } from "@/config/entities";
+import Step1 from "./steps/Step1";
+import Step2 from "./steps/Step2";
+import Step3 from "./steps/Step3";
+import Step4 from "./steps/Step4";
+import { useState } from "react";
+import { toast } from "sonner";
 
-import RelationField from "./RelationField";
-import GroupField from "./GroupField";
-import SelectField from "./SelectField";
-import TextField from "./TextField";
-import { Field } from "@/type";
+export type Props = {
+  formData: Record<string, any>;
+  updateField: (key: string, value: any) => void;
+  onUpload?: (file: File | null) => void;
+};
 
-export default function UsersForm({ initialData, onSubmit, onClose }: any) {
-  const [formData, setFormData] = useState(initialData || {});
+type UserFormProps = {
+  initialData?: Record<string, any> & {
+    id?: number;
+  };
+};
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    await onSubmit(formData);
-    onClose();
+const initialState = Object.fromEntries(
+  entityConfig.users.fields.map((f) => [f.name, ""]),
+);
+
+const stepComponents: { [key: number]: React.ComponentType<any> } = {
+  1: Step1,
+  2: Step2,
+  3: Step3,
+  4: Step4,
+};
+
+export default function UserForm({ initialData }: UserFormProps) {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    ...initialState,
+    confirmPassword: "",
+    socials: [],
+    ...initialData,
+  });
+
+  const next = () => setStep((prev) => prev + 1);
+  const back = () => setStep((prev) => prev - 1);
+
+  const updateField = (name: keyof FormData, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
+  const handleSubmit = async () => {
+    const id = initialData?.id;
+    try {
+      // Build payload
+      const payload = Object.fromEntries(
+        Object.keys(initialState).map((key) => {
+          const value = formData[key as keyof typeof formData];
+          return [key, key.endsWith("_id") ? Number(value) : value];
+        }),
+      );
+
+      // Send request
+      const res = await fetch(id ? `/api/users/${id}` : "/api/users", {
+        method: id ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      // If backend returns error status
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+
+        console.log("STATUS:", res.status);
+        console.log("ERROR:", data);
+
+        // Backend error message (preferred)
+        if (data?.error) {
+          toast.error(data.error);
+        } else if (data?.message) {
+          toast.error(data.message);
+        } else {
+          toast.error("Something went wrong");
+        }
+
+        return;
+      }
+      // Success
+      toast.success(
+        id ? "User Updated successfully" : "User Created successfully",
+      );
+    } catch (err: any) {
+      // Frontend/network error
+      toast.error(err.message || "Network error");
+    }
+  };
+
+  const CurrentStep = stepComponents[step];
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-bold">
-        {initialData ? "Edit" : "Create"} User
-      </h2>
+    <div className="max-w-3xl mx-auto p-6 flex flex-col h-[80vh] bg-se4 rounded-2xl">
+      <h1>User Form</h1>
+      <Progress step={step} setStep={setStep} />
+      <CurrentStep formData={formData} updateField={updateField} />
 
-      <EntityForm
-        config={entityConfig.users}
-        formData={formData}
-        setFormData={setFormData}
-      />
+      <div className="flex justify-between mt-auto pt-8">
+        {step > 1 && (
+          <button onClick={back} className="btn">
+            Back
+          </button>
+        )}
 
-      <button type="submit" className="btn">
-        {initialData ? "Update User" : "Create User"}
-      </button>
-    </form>
+        {step < 4 ? (
+          <button onClick={next} className="btn">
+            Next
+          </button>
+        ) : (
+          <button onClick={handleSubmit} className="btn">
+            {initialData?.id ? "Update" : "Save"}
+          </button>
+        )}
+      </div>
+    </div>
   );
 }
 
-/* =========================
-   TYPES
-   ========================= */
-
-export interface Config {
-  fields: Field[];
-}
-
-interface EntityFormProps {
-  config: Config;
-  formData: Record<string, any>;
-  setFormData: (data: Record<string, any>) => void;
-}
-
-/* =========================
-   MAIN FORM
-========================= */
-
-export function EntityForm({ config, formData, setFormData }: EntityFormProps) {
-  // reusable updater
-  const updateField = (name: string, value: any) => {
-    const newData = { ...formData, [name]: value };
-
-    // RESET DEPENDENCIES
-    config.fields.forEach((f: any) => {
-      if (f.parentField === name) {
-        newData[f.name] = "";
-      }
-    });
-
-    setFormData(newData);
-  };
+function Progress({
+  step,
+  setStep,
+}: {
+  step: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  const steps = ["Personal", "Address", "Upload", "Preview"];
 
   return (
-    <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-auto">
-      {config.fields.map((field) => {
-        /* =========================
-           TEXT / EMAIL INPUT
-        ========================= */
+    <div className="mb-5">
+      <div className="relative flex justify-between">
+        <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200" />
+        <div
+          className="absolute top-1/2 left-0 h-1 bg-pr2 transition-all duration-300"
+          style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}
+        />
+        {steps.map((label, index) => {
+          const current = index + 1;
 
-        if (
-          field.type === "text" ||
-          field.type === "email" ||
-          field.type === "password"
-        ) {
           return (
-            <TextField
-              key={field.name}
-              label={field.label}
-              type={field.type}
-              value={formData[field.name]}
-              required={field.required}
-              onChange={(value) => updateField(field.name, value)}
-            />
+            <button
+              key={label}
+              type="button"
+              onClick={() => setStep(current)}
+              className=" relative z-10 flex flex-col items-center"
+            >
+              <div
+                className={`w-5 h-5 md:w-9 md:h-9 text-sm md:text-md rounded-full flex items-center justify-center border-2 bg-se7 
+                  ${step >= current ? "bg-pr2! border-pr2 text-se4" : "border-gray-300"}`}
+              >
+                {current}
+              </div>
+            </button>
           );
-        }
-
-        /* =========================
-           TEXTAREA
-        ========================= */
-
-        if (field.type === "textarea") {
-          return (
-            <div key={field.name}>
-              <label className="block mb-1 text-sm font-medium">
-                {field.label}
-              </label>
-
-              <textarea
-                placeholder={field.label}
-                value={formData[field.name] || ""}
-                required={field.required}
-                onChange={(e) => updateField(field.name, e.target.value)}
-                className="border p-2 w-full rounded min-h-30"
-              />
-            </div>
-          );
-        }
-
-        /* =========================
-           SELECT DROPDOWN
-          ========================= */
-
-        if (field.type === "select") {
-          return (
-            <SelectField
-              key={field.name}
-              label={field.label}
-              value={formData[field.name]}
-              options={field.options || []}
-              onChange={(value) => updateField(field.name, value)}
-            />
-          );
-        }
-
-        /* =========================
-           RELATION DROPDOWN
-          ========================= */
-
-        if (field.type === "relation") {
-          return (
-            <RelationField
-              key={field.name}
-              field={field}
-              formData={formData}
-              value={formData[field.name]}
-              onChange={(value) =>
-                updateField(field.name, value ? Number(value) : null)
-              }
-            />
-          );
-        }
-
-        if (field.type === "group") {
-          return (
-            <GroupField
-              key={field.name}
-              field={field}
-              formData={formData}
-              setFormData={setFormData}
-            />
-          );
-        }
-
-        return null;
-      })}
+        })}
+      </div>
     </div>
   );
 }
