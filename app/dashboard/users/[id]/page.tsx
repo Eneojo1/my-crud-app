@@ -104,7 +104,10 @@ export default function Profile({ params }: { params: { id: string } }) {
           <span className="flex gap-3">
             <Bell size={18} />
             <Avatar className="h-7 w-7">
-              <AvatarImage src="/beauty.jpg" alt={user?.fname} />
+              <AvatarImage
+                src={user.avatar?.url || "/user.jpg"}
+                alt={user?.fname}
+              />
               <AvatarFallback>
                 {user?.fname?.charAt(0)}
                 {user?.lname?.charAt(0)}
@@ -131,11 +134,10 @@ export default function Profile({ params }: { params: { id: string } }) {
               <ul className="flex flex-col justify-center items-center gap-2">
                 <li>
                   <Avatar className="h-30 w-30 mt-4">
-                    <AvatarImage src="/beauty.jpg" alt={user?.fname} />
-                    <AvatarFallback>
-                      {user?.fname?.charAt(0)}
-                      {user?.lname?.charAt(0)}
-                    </AvatarFallback>
+                    <AvatarImage
+                      src={user.avatar?.url || "/user.jpg"}
+                      alt={user?.fname}
+                    />
                   </Avatar>
                 </li>
                 <li className="bg-green-100 text-sm rounded px-2">Active</li>

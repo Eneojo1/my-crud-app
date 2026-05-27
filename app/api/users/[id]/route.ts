@@ -21,7 +21,21 @@ export async function GET(req: Request, { params }: any) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json(user);
+    const avatar = await prisma.media.findFirst({
+      where: {
+        entity_type: "user",
+        entity_id: user.id,
+        type: "avatar",
+      },
+
+      select: {
+        id: true,
+        url: true,
+        type: true,
+      },
+    });
+
+    return NextResponse.json({ ...user, avatar: avatar || null });
   } catch {
     return NextResponse.json({ error: "Failed" }, { status: 500 });
   }

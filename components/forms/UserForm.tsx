@@ -35,9 +35,17 @@ export default function UserForm({ initialData }: UserFormProps) {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     ...initialState,
-    confirmPassword: "",
-    socials: [],
     ...initialData,
+    confirmPassword: "",
+    socials: initialData?.socials || [],
+    avatar: initialData?.avatar?.url || "",
+    avatarFile: null as File | null,
+    // ...initialState,
+    // confirmPassword: "",
+    // socials: [],
+    //avatar: "", // preview URL
+    //avatarFile: null as File | null, // actual file
+    // ...initialData,
   });
 
   const next = () => setStep((prev) => prev + 1);
@@ -52,48 +60,60 @@ export default function UserForm({ initialData }: UserFormProps) {
 
   const handleSubmit = async () => {
     const id = initialData?.id;
-    try {
-      // Build payload
-      const payload = Object.fromEntries(
-        Object.keys(initialState).map((key) => {
-          const value = formData[key as keyof typeof formData];
-          return [key, key.endsWith("_id") ? Number(value) : value];
-        }),
-      );
 
-      // Send request
-      const res = await fetch(id ? `/api/users/${id}` : "/api/users", {
-        method: id ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+    try {
+      const payload = new FormData();
+
+      Object.entries(formData).forEach(([key, value]) => {
+        // Ignore fields
+        if (
+          value === null ||
+          value === undefined ||
+          key === "confirmPassword" ||
+          key === "avatar" // preview only
+        ) {
+          return;
+        }
+
+        // File upload
+        if (key === "avatarFile") {
+          if (value instanceof File) {
+            payload.append("avatar", value);
+          }
+
+          return;
+        }
+
+        // Arrays (socials)
+        if (Array.isArray(value)) {
+          payload.append(key, JSON.stringify(value));
+          return;
+        }
+
+        // Skip empty strings if desired
+        if (value === "") return;
+
+        payload.append(key, String(value));
       });
 
-      // If backend returns error status
+      const res = await fetch(id ? `/api/users/${id}` : "/api/users", {
+        method: id ? "PUT" : "POST",
+        body: payload,
+      });
+
       if (!res.ok) {
         const data = await res.json().catch(() => null);
 
-        console.log("STATUS:", res.status);
-        console.log("ERROR:", data);
-
-        // Backend error message (preferred)
-        if (data?.error) {
-          toast.error(data.error);
-        } else if (data?.message) {
-          toast.error(data.message);
-        } else {
-          toast.error("Something went wrong");
-        }
+        toast.error(data?.error || data?.message || "Something went wrong");
+        console.error(data?.error || data?.message || "Something went wrong");
 
         return;
       }
-      // Success
+
       toast.success(
-        id ? "User Updated successfully" : "User Created successfully",
+        id ? "User updated successfully" : "User created successfully",
       );
     } catch (err: any) {
-      // Frontend/network error
       toast.error(err.message || "Network error");
     }
   };

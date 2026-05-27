@@ -14,7 +14,6 @@ export default function EditUser({ params }: { params: { id: string } }) {
       setLoading(true);
 
       const res = await fetch(`/api/users/${id}`).then((r) => r.json());
-      console.log({ res });
 
       setUser(res);
     } catch (err) {
@@ -24,8 +23,6 @@ export default function EditUser({ params }: { params: { id: string } }) {
       setLoading(false);
     }
   }
-
-  console.log(user);
 
   useEffect(() => {
     fetchData();
