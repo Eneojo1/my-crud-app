@@ -58,7 +58,7 @@ model Posts {
   user_id    Int
   category   String
   title      String
-  text       String
+  text       String     @db.LongText
   published  Boolean    @default(false)
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
@@ -75,7 +75,7 @@ model Comments {
   guest       String?
   post_id     Int
   parent_id   Int?
-  comment     String
+  comment     String     @db.LongText
   created_at  DateTime   @default(now())
   updated_at  DateTime   @updatedAt
 

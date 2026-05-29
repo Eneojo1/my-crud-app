@@ -9,7 +9,6 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 const Comment = ({ node, depth = 0 }: CommentProps) => {
   const [isReplying, setIsReplying] = useState(false);
-
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(
     typeof node.likes === "number" ? node.likes : 0,

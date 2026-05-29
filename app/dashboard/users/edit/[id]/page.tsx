@@ -12,9 +12,7 @@ export default function EditUser({ params }: { params: { id: string } }) {
     const { id } = await params;
     try {
       setLoading(true);
-
       const res = await fetch(`/api/users/${id}`).then((r) => r.json());
-
       setUser(res);
     } catch (err) {
       console.error(err);

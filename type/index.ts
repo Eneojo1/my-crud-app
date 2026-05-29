@@ -8,16 +8,17 @@ export type Post = {
   author: {
     avatar?: string;
   };
-  likes?: unknown[];
-  comments?: unknown[];
+  dislikes?: Reaction[];
+  likes?: Reaction[];
+  comments?: CommentType[];
   shares?: unknown[];
+  is_liked?: boolean;
 };
 
 export type CommentProps = {
   node: CommentType;
   depth?: number;
   maxDepth?: number;
-  isLast?: boolean;
 };
 
 export type CommentType = {
@@ -30,37 +31,35 @@ export type CommentType = {
   comment: string;
   created_at: string;
   updated_at: string;
-  author?: UserType | null;
-  dislikes?: LikeType[];
-  likes?: LikeType[];
+  author?: User | null;
+  dislikes?: Reaction[];
+  likes?: Reaction[];
   replies: CommentType[];
   node: CommentType[];
 };
 
-export type LikeType = {
-  id: string;
-  user_id: string | null;
-  guest: string | null;
-  post_id: string | null;
-  comment_id: string | null;
-  type: string;
-  created_at: string;
-  updated_at: string;
-};
+export type Sex = "Male" | "Female";
 
-export type UserType = {
-  id: string;
+export type User = {
+  id: number;
   fname: string;
-  oname: string;
+  oname?: string | null;
   lname: string;
-  avatar: string;
+  sex: Sex;
+  phone: string;
+  email: string;
+  password: string;
+
+  country_id?: number | null;
+  state_id?: number | null;
+  lga_id?: number | null;
+
+  address: string;
+  role_id: number;
+  status_id: number;
+  socials?: [] | null;
+  avatar?: string;
 };
-// export type CommentProps = {
-//   node: CommentType;
-//   depth?: number;
-//   maxDepth?: number;
-//   isLast?: boolean;
-// };
 
 export type Field = {
   type:
@@ -91,23 +90,7 @@ type Option = {
   value: string | number;
 };
 
-export type PostType = {
-  id: string;
-  title: string;
-  thumbnail?: string | null;
-  category: string;
-  text?: string;
-  updated_at: string;
-  author: {
-    avatar?: string;
-  };
-  dislikes?: ReactionType[];
-  likes?: ReactionType[];
-  comments?: unknown[];
-  shares?: unknown[];
-};
-
-export type ReactionType = {
+export type Reaction = {
   id: string;
   user_id: string | null;
   guest: string | null;

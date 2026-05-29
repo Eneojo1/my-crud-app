@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -52,7 +53,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           ${collapsed ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        <div>Avatar</div>
+        <Avatar className="m-auto h-20 w-20 my-5">
+          <AvatarImage src={"/user.jpg"} />
+        </Avatar>
         <nav className="space-y-2">
           {menu.map((item, idx) => {
             const active = pathname === item.href;

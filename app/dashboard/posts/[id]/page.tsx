@@ -8,13 +8,14 @@ import { useEffect, useRef, useState } from "react";
 import Composer from "../composer";
 import Comment from "../comment";
 import Image from "next/image";
-import posts from "../buildPost";
 import { FaShare } from "react-icons/fa";
+import { useBlog } from "@/shared/context/BlogContext";
 
 const PostPage = () => {
   const [showComposer, setShowComposer] = useState(false);
   const params = useParams();
-  const post = posts.find((post) => post.id === params.id);
+  const { posts } = useBlog();
+  const post = posts.find((post) => String(post.id) === params.id);
   if (!post) return notFound();
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -61,7 +62,7 @@ const PostPage = () => {
             <ThumbsUp size={16} /> {post.likes?.length}
           </span>
           <span className={styles.statItem}>
-            <ThumbsDown size={16} /> {post.dislike?.length}
+            <ThumbsDown size={16} /> {post.dislikes?.length}
           </span>
           <span
             className={styles.statItem}
@@ -81,10 +82,10 @@ const PostPage = () => {
       <p className="text-gray-700 py-2 border-b">{post.text}</p>
 
       <p className="text-gray-500 py-2 border-b">
-        Comments ({formatNumber(post.comments.length)})
+        Comments ({formatNumber(post.comments?.length || 0)})
       </p>
 
-      {post.comments.map((node) => Comment({ node }))}
+      {post.comments?.map((node) => Comment({ node }))}
 
       {showComposer && (
         <div ref={bottomRef}>

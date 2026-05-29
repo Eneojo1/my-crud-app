@@ -7,6 +7,7 @@ import Step3 from "./steps/Step3";
 import Step4 from "./steps/Step4";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export type Props = {
   formData: Record<string, any>;
@@ -40,13 +41,9 @@ export default function UserForm({ initialData }: UserFormProps) {
     socials: initialData?.socials || [],
     avatar: initialData?.avatar?.url || "",
     avatarFile: null as File | null,
-    // ...initialState,
-    // confirmPassword: "",
-    // socials: [],
-    //avatar: "", // preview URL
-    //avatarFile: null as File | null, // actual file
-    // ...initialData,
   });
+
+  const router = useRouter();
 
   const next = () => setStep((prev) => prev + 1);
   const back = () => setStep((prev) => prev - 1);
@@ -105,7 +102,7 @@ export default function UserForm({ initialData }: UserFormProps) {
         const data = await res.json().catch(() => null);
 
         toast.error(data?.error || data?.message || "Something went wrong");
-        console.error(data?.error || data?.message || "Something went wrong");
+        console.log(data?.error || data?.message || "Something went wrong");
 
         return;
       }
@@ -113,6 +110,9 @@ export default function UserForm({ initialData }: UserFormProps) {
       toast.success(
         id ? "User updated successfully" : "User created successfully",
       );
+
+      // Navigate to users list
+      router.push("/dashboard/users");
     } catch (err: any) {
       toast.error(err.message || "Network error");
     }

@@ -2,7 +2,7 @@ export const dataset = {
   posts: [
     {
       id: "1",
-      user_id: "99",
+      user_id: "9",
       category: "technology",
       title: "Productivity Hacks for Tech Teams",
       text: "When we launched our first product, I told myself we would not hire salespeople until we had a repeatable funnel. We were two founders, a small marketing budget, and a mountain of cold outreach to do. The first six months were brutal — meetings that led nowhere, demo fatigue, and a constant scramble to justify our runway decisions. But instead of treating sales as a black box, we treated it like a product to be iterated.\\n\\nFirst, we mapped the full buyer journey end to end: discovery channels, lead qualification criteria, onboarding success triggers, and churn signals. We instrumented every point with lightweight analytics and started running weekly experiments. The key insight was that a small set of content assets (one deep-case study, a 12-minute product walkthrough, and a template we gave away) generated nearly 60% of our qualified leads when amplified with targeted ads and warm email sequences.\\n\\nNext, qualification rules moved out of subjective judgment and into explicit criteria. If a prospect hit two or more product-fit signals and had a clear timeframe, they moved to the demo queue. Otherwise they entered a nurture flow. That simple change reduced our demo time by 40% and eliminated half the “talkative but unready” prospects. Finally, we standardized the demo experience into a 20-minute playbook focused on outcomes, not features.\\n\\nThe result: by month nine, our conversion from demo to paid had improved enough that hiring a single SDR made sense. But crucially, the SDR relied on the repeatable funnel we had built — playbooks, qualification flags, and content-driven outreach. If you’re a founder trying to delay headcount, treat sales like a product: instrument, iterate, and automate the parts that don’t require nuanced human judgement.",
@@ -22,7 +22,7 @@ export const dataset = {
     },
     {
       id: "3",
-      user_id: "44",
+      user_id: "4",
       category: "technology",
       title: "Deploying to Production Seamlessly",
       text: "Turning a side project into a sustainable business is equal parts discipline and leverage. My co-founder started a content-heavy newsletter while working full time; I joined later and helped turn the traction into a productized service. The playbook we used focused on three pillars: productize a core service, systemize distribution, and limit scope until revenue proved repeatable.\\n\\nProductization meant extracting the most valuable outcome clients paid for (not the full bespoke service) and building a repeatable deliverable. Systemizing distribution involved a referral engine embedded into onboarding — small prompts asking early customers for introductions in exchange for discounts.\\n\\nThe hardest part for many founders is saying no. We resisted feature creep aggressively in the first 12 months and focused on a narrow vertical where our messages resonated. That focus allowed us to optimize processes and margins. Today, the business supports two full-time employees and a modest local ad spend that reliably brings in leads. The lesson: start with a repeatable offer, create predictable paths for discovery and referrals, and don’t expand until the unit economics are proven.",
@@ -32,7 +32,7 @@ export const dataset = {
     },
     {
       id: "4",
-      user_id: "88",
+      user_id: "8",
       category: "technology",
       title: "How to Stay Motivated as a Developer",
       text: "Churn kills startups quietly. Many teams obsess over acquisition and only later realize that retention is the real lever for sustainable growth. In our first year, we identified three practical interventions that materially reduced churn: better onboarding sequences, clearer success milestones, and early intervention playbooks for at-risk accounts.\\n\\nOnboarding matters more than elegant design. We replaced a feature walkthrough with an outcomes-driven checklist that users could complete in under 20 minutes. Each checklist completion fed into our success dashboard and triggered targeted in-app tips. Second, we defined measurable success milestones for the product — a simple set of actions that predicted long-term retention. When users failed to hit milestone one within seven days, the system created a task for a customer success check-in.\\n\\nLastly, the intervention playbook standardized outreach for at-risk accounts: a sequence of personalized emails, an offer of a live short session, and guided documentation. By combining these three steps, we saw a reduction in churn of roughly 18% over two quarters. The pragmatic takeaway is to instrument signals early and design low-friction, automated interventions before human touch is necessary.",
@@ -52,7 +52,7 @@ export const dataset = {
     },
     {
       id: "6",
-      user_id: "99",
+      user_id: "9",
       category: "business",
       title: "Design Systems Explained",
       text: "Everyone talks about product-market fit, but few teams are disciplined about how they do discovery. We replaced ad-hoc customer calls with a repeatable discovery framework: hypothesis, interview guide, test, and measure. Every interview had three consistent sections — problem validation, solution reservation, and purchase intent — which made insights comparable across prospects.\\n\\nWe tracked signals that correlated with subsequent purchase behavior and discovered surprising patterns: certain job titles had four times higher willingness to pay and specific phrasing in pain statements predicted urgency. Those signals helped us re-prioritize roadmap items and tailor messaging to the highest-converting segments.\\n\\nDiscovery is not a one-off; it is an operational rhythm. By institutionalizing it, we turned qualitative interviews into quantifiable signals that informed product decisions and improved acquisition efficiency.",
@@ -62,7 +62,7 @@ export const dataset = {
     },
     {
       id: "7",
-      user_id: "12",
+      user_id: "2",
       category: "lifestyle",
       title: "Tips for Becoming a Better Developer",
       text: "Hiring a first product manager is a pivotal decision. Too junior and they will struggle with prioritization; too senior and they may expect headcount and processes you don't have. We solved this by writing a role-first brief that emphasized outcomes over activities: deliver a product roadmap that leads to X% activation increase, reduce onboarding time by Y, and own feature prioritization in collaboration with engineering and sales.\\n\\nInterviews focused on past examples of trade-offs and prioritization rather than hypothetical frameworks. We asked candidates to walk through specific decisions they had made, the data used, stakeholders involved, and the measured outcome. This approach revealed practical experience over theoretical knowledge.\\n\\nOnce hired, the PM had a 90-day plan jointly signed by the CEO outlining success metrics and stakeholder commitments. The clarity of expectations and early wins helped the hire integrate quickly and deliver measurable impact.",
@@ -82,7 +82,7 @@ export const dataset = {
     },
     {
       id: "9",
-      user_id: "88",
+      user_id: "8",
       category: "technology",
       title: "Understanding REST APIs",
       text: "A simple guide to how RESTful APIs work and why they are widely used.",
@@ -92,7 +92,7 @@ export const dataset = {
     },
     {
       id: "10",
-      user_id: "99",
+      user_id: "9",
       category: "travel",
       title: "My Favorite VS Code Extensions",
       text: "These extensions have boosted my productivity tremendously.",
@@ -102,7 +102,7 @@ export const dataset = {
     },
     {
       id: "11",
-      user_id: "12",
+      user_id: "1",
       category: "business",
       title: "Getting Started with UI/UX Design",
       text: "Simple principles every beginner designer should follow.",

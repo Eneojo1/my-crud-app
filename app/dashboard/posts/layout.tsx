@@ -2,9 +2,9 @@
 
 import { BlogContext } from "@/shared/context/BlogContext";
 import { ChevronLeft, Search } from "lucide-react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import buildPost from "./buildPost";
+import commentTree from "./commentTree";
 
 const categoryBg = [
   "bg-se1",
@@ -17,15 +17,36 @@ const categoryBg = [
 ];
 
 export default function BlogLayout({ children }: { children: ReactNode }) {
+  const [rawPosts, setRawPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    setLoading(true);
+    fetch("/api/posts")
+      .then((res) => res.json())
+      .then((data) => {
+        setRawPosts(data);
+        setLoading(false);
+      });
+  }, []);
+
+  const buildPost = rawPosts.map((post) => ({
+    ...post,
+    comments: commentTree(
+      post.comments
+        .filter((c: any) => c.post_id === post.id)
+        .map((c: any) => ({ ...c, replies: [] })),
+    ),
+  }));
 
   const posts = buildPost.filter((post) =>
     `${post.title} ${post.text}`.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
-    <BlogContext.Provider value={{ posts }}>
+    <BlogContext.Provider value={{ posts, loading }}>
       <section className="mb-6 max-w-7xl mx-auto py-2">
         {/* Header */}
         <div className="fixed w-full top-nh flex flex-col sm:flex-row bg-se5 gap-3 py-2 justify-between z-40 border border-b-pr1">

@@ -115,10 +115,24 @@ export async function POST(req: Request) {
       });
     }
     return NextResponse.json(user, { status: 201 });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
+
+    if (err.code === "P2002") {
+      const field = err.meta?.target.split("_")[1];
+      const messages: Record<string, string> = {
+        email: "Email already exists",
+        phone: "Phone number already exists",
+      };
+
+      return NextResponse.json(
+        { error: messages[field] || `${field} already exists` },
+        { status: 400 },
+      );
+    }
+
     return NextResponse.json(
-      { error: "Failed to create user" },
+      { error: err.message, fullError: err },
       { status: 500 },
     );
   }

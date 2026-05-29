@@ -1,13 +1,14 @@
 "use client";
 
-import { PostProps } from "@/type";
+import { Post } from "@/type";
 import { createContext, useContext } from "react";
 
 type BlogContextType = {
-  posts: PostProps[];
+  posts: Post[];
+  loading: boolean;
 };
 
-export const BlogContext = createContext<BlogContextType | null>({ posts: [] });
+export const BlogContext = createContext<BlogContextType | null>(null);
 
 export const useBlog = (): BlogContextType => {
   const context = useContext(BlogContext);

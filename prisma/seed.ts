@@ -3,9 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 async function main() {
   await prisma.locations.createMany({
-    // ======================
-    // LOCATIONS
-    // ======================
+    //   // ======================
+    //   // LOCATIONS
+    //   // ======================
     data: [
       { id: 1, name: "Afghanistan", type: "country", parent_id: null },
       { id: 2, name: "Albania", type: "country", parent_id: null },
@@ -1105,12 +1105,323 @@ async function main() {
     skipDuplicates: true,
   });
 
-  await prisma.roles.createMany({
+  // ======================
+  // ROLES
+  // ======================
+  // await prisma.roles.createMany({
+  //   data: [
+  //     { id: 1, name: "Admin", description: "" },
+  //     { id: 2, name: "CEO", description: "" },
+  //     { id: 3, name: "User", description: "" },
+  //   ],
+  // });
+
+  // ======================
+  // ROLES
+  // ======================
+  // await prisma.statuses.createMany({
+  //   data: [
+  //     { id: 1, name: "Active", description: "" },
+  //     { id: 2, name: "Pending", description: "" },
+  //   ],
+  // });
+
+  // ======================
+  // POSTS
+  // ======================
+  await prisma.posts.createMany({
     data: [
-      { id: 1, name: "Admin", description: "" },
-      { id: 2, name: "CEO", description: "" },
-      { id: 3, name: "User", description: "" },
+      {
+        id: 1,
+        user_id: 4,
+        category: "travel",
+        title: "A Quiet Morning in Oban",
+        text: "When we launched our first product, I told myself we would not hire salespeople until we had a repeatable funnel. We were two founders, a small marketing budget, and a mountain of cold outreach to do. The first six months were brutal — meetings that led nowhere, demo fatigue, and a constant scramble to justify our runway decisions. But instead of treating sales as a black box, we treated it like a product to be iterated.\\n\\nFirst, we mapped the full buyer journey end to end: discovery channels, lead qualification criteria, onboarding success triggers, and churn signals. We instrumented every point with lightweight analytics and started running weekly experiments. The key insight was that a small set of content assets (one deep-case study, a 12-minute product walkthrough, and a template we gave away) generated nearly 60% of our qualified leads when amplified with targeted ads and warm email sequences.\\n\\nNext, qualification rules moved out of subjective judgment and into explicit criteria. If a prospect hit two or more product-fit signals and had a clear timeframe, they moved to the demo queue. Otherwise they entered a nurture flow. That simple change reduced our demo time by 40% and eliminated half the “talkative but unready” prospects. Finally, we standardized the demo experience into a 20-minute playbook focused on outcomes, not features.\\n\\nThe result: by month nine, our conversion from demo to paid had improved enough that hiring a single SDR made sense. But crucially, the SDR relied on the repeatable funnel we had built — playbooks, qualification flags, and content-driven outreach. If you’re a founder trying to delay headcount, treat sales like a product: instrument, iterate, and automate the parts that don’t require nuanced human judgement.",
+        published: true,
+      },
+      {
+        id: 2,
+        user_id: 2,
+        category: "tech",
+        title: "Trying Out a New UI Pattern",
+        text: "Setting price is as much behavioral as it is arithmetic. In our earliest experiments we priced purely on cost plus margin and were surprised by the results: a lower tier with too many features cannibalized uptake for the higher tier, and enterprise prospects ignored our 'standard' tier entirely.\\n\\nThe work that changed our approach combined simple experiments with classic behavioral nudges. We introduced a decoy plan, packaged features into outcome-focused tiers (starter: quick wins, growth: measurable ROI, enterprise: customization & support), and tested anchoring by presenting the enterprise plan first. Within a month we observed a significant shift in choice architecture — more customers self-selected into the growth tier which delivered the best lifetime value.\\n\\nCrucial to success was measuring real signals: time to first value, churn in month three, and support touch frequency. Pricing isn't fixed; it is dynamic and should be paired with product improvements and tightened onboarding flows. For founders, the practical takeaway is simple: price for outcomes, not hours. Test the anchors, watch for churn regressors, and be ready to simplify offerings into clear stories that buyers can understand quickly.",
+        published: true,
+      },
+      {
+        id: 3,
+        user_id: 7,
+        category: "lifestyle",
+        title: "Minimalism Isn't About Owning Less",
+        text: "Turning a side project into a sustainable business is equal parts discipline and leverage. My co-founder started a content-heavy newsletter while working full time; I joined later and helped turn the traction into a productized service. The playbook we used focused on three pillars: productize a core service, systemize distribution, and limit scope until revenue proved repeatable.\\n\\nProductization meant extracting the most valuable outcome clients paid for (not the full bespoke service) and building a repeatable deliverable. Systemizing distribution involved a referral engine embedded into onboarding — small prompts asking early customers for introductions in exchange for discounts.\\n\\nThe hardest part for many founders is saying no. We resisted feature creep aggressively in the first 12 months and focused on a narrow vertical where our messages resonated. That focus allowed us to optimize processes and margins. Today, the business supports two full-time employees and a modest local ad spend that reliably brings in leads. The lesson: start with a repeatable offer, create predictable paths for discovery and referrals, and don’t expand until the unit economics are proven.",
+        published: false,
+      },
+      {
+        id: 4,
+        user_id: 9,
+        category: "food",
+        title: "Homemade Jollof Triumph",
+        text: "Churn kills startups quietly. Many teams obsess over acquisition and only later realize that retention is the real lever for sustainable growth. In our first year, we identified three practical interventions that materially reduced churn: better onboarding sequences, clearer success milestones, and early intervention playbooks for at-risk accounts.\\n\\nOnboarding matters more than elegant design. We replaced a feature walkthrough with an outcomes-driven checklist that users could complete in under 20 minutes. Each checklist completion fed into our success dashboard and triggered targeted in-app tips. Second, we defined measurable success milestones for the product — a simple set of actions that predicted long-term retention. When users failed to hit milestone one within seven days, the system created a task for a customer success check-in.\\n\\nLastly, the intervention playbook standardized outreach for at-risk accounts: a sequence of personalized emails, an offer of a live short session, and guided documentation. By combining these three steps, we saw a reduction in churn of roughly 18% over two quarters. The pragmatic takeaway is to instrument signals early and design low-friction, automated interventions before human touch is necessary.",
+        published: true,
+      },
+      {
+        id: 5,
+        user_id: 8,
+        category: "fitness",
+        title: "First 5K in Months",
+        text: "Scale exposes the cracks in process and values. We grew from 3 to 18 people in under a year and learned quickly that hiring without operational guardrails leads to drift. Operational discipline doesn't mean bureaucracy — it means defined decision rights, onboarding checklists, and a cadence of communication that preserves culture.\\n\\nWe adopted three practices: weekly leadership syncs with a clear agenda, written decision logs for non-trivial calls, and a 'buddy' onboarding system for new hires that pairs culture exposure with practical training. These changes cut onboarding time by nearly half and reduced errors created by inconsistent handoffs.\\n\\nGuardrails also include how you hire. We tightened job briefs to reflect outcomes and introduced structured interviews focused on past behavior rather than hypothetical answers. Structure provided predictability and helped us scale while keeping core values visible across teams.",
+        published: true,
+      },
+      {
+        id: 6,
+        user_id: 4,
+        category: "motoring",
+        title: "Night Drive Reflections",
+        text: "Everyone talks about product-market fit, but few teams are disciplined about how they do discovery. We replaced ad-hoc customer calls with a repeatable discovery framework: hypothesis, interview guide, test, and measure. Every interview had three consistent sections — problem validation, solution reservation, and purchase intent — which made insights comparable across prospects.\\n\\nWe tracked signals that correlated with subsequent purchase behavior and discovered surprising patterns: certain job titles had four times higher willingness to pay and specific phrasing in pain statements predicted urgency. Those signals helped us re-prioritize roadmap items and tailor messaging to the highest-converting segments.\\n\\nDiscovery is not a one-off; it is an operational rhythm. By institutionalizing it, we turned qualitative interviews into quantifiable signals that informed product decisions and improved acquisition efficiency.",
+        published: false,
+      },
+      {
+        id: 7,
+        user_id: 1,
+        category: "coding",
+        title: "TypeScript Saved Me Again",
+        text: "Hiring a first product manager is a pivotal decision. Too junior and they will struggle with prioritization; too senior and they may expect headcount and processes you don't have. We solved this by writing a role-first brief that emphasized outcomes over activities: deliver a product roadmap that leads to X% activation increase, reduce onboarding time by Y, and own feature prioritization in collaboration with engineering and sales.\\n\\nInterviews focused on past examples of trade-offs and prioritization rather than hypothetical frameworks. We asked candidates to walk through specific decisions they had made, the data used, stakeholders involved, and the measured outcome. This approach revealed practical experience over theoretical knowledge.\\n\\nOnce hired, the PM had a 90-day plan jointly signed by the CEO outlining success metrics and stakeholder commitments. The clarity of expectations and early wins helped the hire integrate quickly and deliver measurable impact.",
+        published: true,
+      },
+      {
+        id: 8,
+        user_id: 7,
+        category: "parenting",
+        title: "Kids and Chaos",
+        text: "Paid acquisition can drive growth quickly but it is rarely sustainable at early stages. We experimented with three non-paid channels that proved durable: strategic partnerships, content with SEO compounding, and product-led growth hooks.\\n\\nPartnerships required a service mindset — we identified companies whose customers needed our product and created co-marketing plays that delivered value to both sides. SEO content initially required an investment but compounded over time, delivering a steady stream of qualified leads. The product-led hooks focused on creating immediate value within the product and subtle viral mechanics encouraging sharing.\\n\\nA disciplined measurement stack allowed us to shift resources toward channels with positive unit economics. The goal is not to avoid paid channels, but to treat them as amplifiers of proven organic signals. When organic channels work, paid can be deployed to scale them efficiently.",
+        published: true,
+      },
+      {
+        id: 9,
+        user_id: 9,
+        category: "finance",
+        title: "Budget Reset",
+        text: "Cutting back on subscriptions I don't use. Small changes add up fast.",
+        published: false,
+      },
+      {
+        id: 10,
+        user_id: 8,
+        category: "photography",
+        title: "Chasing Light",
+        text: "Captured a perfect golden-hour shot by accident. Sometimes luck > skill.",
+        published: true,
+      },
     ],
+    skipDuplicates: true,
+  });
+
+  // ======================
+  // COMMENTS
+  // ======================
+  await prisma.comments.createMany({
+    data: [
+      {
+        id: 1,
+        user_id: null,
+        guest: "Guest Dana",
+        post_id: 2,
+        parent_id: 9,
+        comment: "Security is key!",
+      },
+      {
+        id: 2,
+        user_id: 9,
+        guest: null,
+        post_id: 4,
+        parent_id: 10,
+        comment: "Let me know how it goes!",
+      },
+      {
+        id: 3,
+        user_id: 8,
+        guest: null,
+        post_id: 2,
+        parent_id: null,
+        comment: "Cloud architecture explained clearly!",
+      },
+      {
+        id: 4,
+        user_id: 4,
+        guest: null,
+        post_id: 6,
+        parent_id: null,
+        comment: "Nice JS tricks, I learned something new.",
+      },
+      {
+        id: 5,
+        user_id: null,
+        guest: "Guest Hannah",
+        post_id: 7,
+        parent_id: 9,
+        comment: "I love these principles.",
+      },
+      {
+        id: 6,
+        user_id: 7,
+        guest: null,
+        post_id: 4,
+        parent_id: null,
+        comment: "CI/CD pipelines are a lifesaver!",
+      },
+      {
+        id: 7,
+        user_id: null,
+        guest: "Guest Frank",
+        post_id: 4,
+        parent_id: 6,
+        comment: "Totally agree!",
+      },
+      {
+        id: 8,
+        user_id: 2,
+        guest: null,
+        post_id: 3,
+        parent_id: 10,
+        comment: "The obvious one of course.",
+      },
+      {
+        id: 9,
+        user_id: null,
+        guest: "Guest Charlie",
+        post_id: 2,
+        parent_id: null,
+        comment: "Helpful visual diagrams.",
+      },
+      {
+        id: 10,
+        user_id: null,
+        guest: "Guest Ian",
+        post_id: 9,
+        parent_id: null,
+        comment: "React performance tips are awesome!",
+      },
+      {
+        id: 11,
+        user_id: null,
+        guest: "Anonymous",
+        post_id: 3,
+        parent_id: 13,
+        comment: "What are you saying?",
+      },
+      {
+        id: 12,
+        user_id: 4,
+        guest: null,
+        post_id: 4,
+        parent_id: null,
+        comment: "Great post! Learned a lot.",
+      },
+      {
+        id: 13,
+        user_id: null,
+        guest: "Guest Eve",
+        post_id: 3,
+        parent_id: null,
+        comment: "Thanks for these tips!",
+      },
+      {
+        id: 14,
+        user_id: null,
+        guest: "Guest Grace",
+        post_id: 5,
+        parent_id: null,
+        comment: "Optimizing queries saves so much time!",
+      },
+      {
+        id: 15,
+        user_id: 8,
+        guest: null,
+        post_id: 3,
+        parent_id: null,
+        comment: "Daily habits really help coding growth.",
+      },
+      {
+        id: 16,
+        user_id: 8,
+        guest: null,
+        post_id: 5,
+        parent_id: 14,
+        comment: "Exactly, indexes are key.",
+      },
+      {
+        id: 17,
+        user_id: 1,
+        guest: null,
+        post_id: 4,
+        parent_id: null,
+        comment: "Excited to try these tips!",
+      },
+      {
+        id: 18,
+        user_id: 7,
+        guest: null,
+        post_id: 10,
+        parent_id: null,
+        comment: "Design systems make teamwork easier.",
+      },
+      {
+        id: 19,
+        user_id: 2,
+        guest: null,
+        post_id: 7,
+        parent_id: null,
+        comment: "UI/UX design tips are great!",
+      },
+      {
+        id: 20,
+        user_id: 4,
+        guest: null,
+        post_id: 3,
+        parent_id: 13,
+        comment: "Which tip did you like most?",
+      },
+      {
+        id: 21,
+        user_id: 7,
+        guest: null,
+        post_id: 8,
+        parent_id: null,
+        comment: "Motivation is hard, these tips help!",
+      },
+      {
+        id: 22,
+        user_id: null,
+        guest: "Guest Alice",
+        post_id: 1,
+        parent_id: null,
+        comment: "Thanks for sharing!",
+      },
+      {
+        id: 23,
+        user_id: null,
+        guest: "Guest Bob",
+        post_id: 1,
+        parent_id: 22,
+        comment: "I agree with you!",
+      },
+      {
+        id: 24,
+        user_id: null,
+        guest: "Guest Jack",
+        post_id: 1,
+        parent_id: null,
+        comment: "REST APIs are easier to understand with this guide.",
+      },
+      {
+        id: 25,
+        user_id: 9,
+        guest: null,
+        post_id: 2,
+        parent_id: null,
+        comment: "Can you expand on security considerations?",
+      },
+    ],
+    skipDuplicates: true,
   });
 }
 main()

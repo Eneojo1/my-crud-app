@@ -1,18 +1,22 @@
 "use client";
 
-import { Share2, ThumbsDown, Heart, MessageCircle } from "lucide-react";
+import { Share2, ThumbsDown, MessageCircle, ThumbsUp } from "lucide-react";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { author, capitalize, timeAgo } from "@/shared/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { LucideIcon } from "lucide-react";
 import { Post } from "@/type";
+import { useState } from "react";
 
 type PostCardProps = {
   post: Post;
 };
 
 export default function PostCard({ post }: PostCardProps) {
+  const [likes, setLikes] = useState(post.likes || []);
+  const [dislikes, setDislikes] = useState(post.dislikes || []);
+
   const wordLimit = 20;
   let readMore = false;
 
@@ -43,7 +47,7 @@ export default function PostCard({ post }: PostCardProps) {
         <div>
           <div className="flex gap-2 border-b pb-2">
             <Avatar className="h-8 w-8">
-              <AvatarImage src={post.author.avatar} />
+              <AvatarImage src={post.author.avatar || "/user.jpg"} />
             </Avatar>
 
             <div className="text-xs text-gray-500">
@@ -76,7 +80,15 @@ export default function PostCard({ post }: PostCardProps) {
 
         {/* Stats */}
         <div className="flex gap-1 md:gap-2 mt-3 items-center text-xs">
-          <Stat icon={Heart} count={post.likes?.length ?? 0} label="likes" />
+          <Stat icon={ThumbsUp} count={post.likes?.length ?? 0} label="likes" />
+
+          <div className="w-px h-4 bg-gray-400" />
+
+          <Stat
+            icon={ThumbsDown}
+            count={post.dislikes?.length ?? 0}
+            label="dislikes"
+          />
 
           <div className="w-px h-4 bg-gray-400" />
 
