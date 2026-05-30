@@ -5,7 +5,7 @@ type LoadingProps = {
 const Loading = ({ size = 80 }: LoadingProps) => {
   return (
     <div
-      className="relative animate-spin"
+      className="relative animate-spin m-auto"
       style={{
         width: size,
         height: size,

@@ -91,14 +91,14 @@ type Option = {
 };
 
 export type Reaction = {
-  id: string;
-  user_id: string | null;
+  id: string | number;
+  user_id: number | null;
   guest: string | null;
-  post_id: string | null;
-  comment_id: string | null;
+  post_id: number | null;
+  comment_id: number | null;
+  type: "like" | "dislike";
   created_at: string;
   updated_at: string;
-  type: string;
 };
 
 export type InputChangeEvent = React.ChangeEvent<

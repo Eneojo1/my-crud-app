@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "@/type";
+import { Post } from "@/lib/type";
 import { createContext, useContext } from "react";
 
 type BlogContextType = {

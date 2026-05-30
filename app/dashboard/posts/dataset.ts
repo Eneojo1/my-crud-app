@@ -479,7 +479,7 @@ export const dataset = {
   ],
   users: [
     {
-      id: "12",
+      id: 12,
       fname: "Eneojo",
       oname: "Richard",
       lname: "Amobeda",
@@ -505,7 +505,7 @@ export const dataset = {
     },
 
     {
-      id: "7",
+      id: 7,
       fname: "Sarah",
       oname: "Anne",
       lname: "McConnell",
@@ -531,7 +531,7 @@ export const dataset = {
     },
 
     {
-      id: "88",
+      id: 88,
       fname: "Marcus",
       oname: "Lee",
       lname: "Thompson",
@@ -557,7 +557,7 @@ export const dataset = {
     },
 
     {
-      id: "44",
+      id: 44,
       fname: "Chloe",
       oname: "Marie",
       lname: "Douglas",
@@ -583,7 +583,7 @@ export const dataset = {
     },
 
     {
-      id: "99",
+      id: 99,
       fname: "Daniel",
       oname: "Owen",
       lname: "Reid",

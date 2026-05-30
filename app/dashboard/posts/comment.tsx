@@ -3,16 +3,13 @@ import { author, formatNumber, timeAgo } from "@/shared/utils";
 import { Reply, Share, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import Composer from "./composer";
-import { CommentProps } from "@/type";
 import { dataset } from "./dataset";
+import { CommentProps } from "@/lib/type";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { useReaction } from "@/hooks/useReaction";
 
 const Comment = ({ node, depth = 0 }: CommentProps) => {
   const [isReplying, setIsReplying] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(
-    typeof node.likes === "number" ? node.likes : 0,
-  );
   const [isDeleting, setIsDeleting] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [visitorName, setVisitorName] = useState("");
@@ -23,25 +20,26 @@ const Comment = ({ node, depth = 0 }: CommentProps) => {
 
   const replyRef = useRef<HTMLDivElement | null>(null);
 
-  const user = dataset.users.find((u) => u.id === "88");
+  const user = dataset.users.find((u) => u.id === 7);
+  const userId = user?.id;
+  const guestId =
+    typeof window !== "undefined" ? localStorage.getItem("guest_id") : null;
 
-  const canDelete = user && (user.id === node.user_id || user.role_id === 1);
+  const canDelete =
+    user && (String(userId) === node.user_id || user.role_id === 1);
 
   const nodeCount = node.replies.length;
   const label = `View ${nodeCount > 1 ? "all " : ""}${nodeCount} repl${nodeCount > 1 ? "ies" : "y"}`;
 
   const hasReplies = nodeCount > 0;
 
-  const handleLike = async () => {
-    if (isLiking) return;
-    setIsLiking(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLiking(false);
-      setIsLiked(!isLiked);
-      setLikesCount(likesCount + 1);
-    }, 1000);
-  };
+  const { likes, dislikes, isLiked, isDisliked, toggleReaction } = useReaction({
+    commentId: Number(node.id),
+    postId: Number(node.post_id),
+    initialLikes: node.likes,
+    initialDislikes: node.dislikes,
+    userId: user?.id ? Number(user.id) : null,
+  });
 
   const handleDelete = async () => {
     if (!confirm("Are you sure you want to delete this comment?")) return;
@@ -76,17 +74,24 @@ const Comment = ({ node, depth = 0 }: CommentProps) => {
         </div>
 
         <div className="action-btns">
-          <button className="flex gap-0.5 items-center">
+          <button
+            className={`flex gap-0.5 items-center ${isLiked ? "text-pr2" : ""}`}
+            onClick={() => toggleReaction("like")}
+          >
             <ThumbsUp />
             <span className="text-sm text-gray-500">
-              {formatNumber(node.likes?.length || 0)}
+              {formatNumber(likes.length)}
             </span>
           </button>
-          <button className="flex gap-0.5 items-center">
+          <button
+            onClick={() => toggleReaction("dislike")}
+            className={`flex gap-0.5 items-center ${
+              isDisliked ? "text-pr2" : ""
+            }`}
+          >
             <ThumbsDown />
-            <span className="text-sm text-gray-500">
-              {formatNumber(node.dislikes?.length || 0)}
-            </span>
+
+            <span className="text-sm">{formatNumber(dislikes.length)}</span>
           </button>
           <button
             onClick={() => setShowComposer((prev) => !prev)}

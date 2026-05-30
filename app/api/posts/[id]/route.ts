@@ -3,68 +3,199 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request, { params }: any) {
   try {
-    const { id } = await params;
+    const id = Number(params.id);
 
-    const user = await prisma.users.findUnique({
-      where: { id: Number(id) },
+    // ======================
+    // POST
+    // ======================
+
+    const post = await prisma.posts.findUnique({
+      where: {
+        id,
+      },
 
       include: {
-        country: true,
-        state: true,
-        lga: true,
-        role: true,
-        status: true,
+        author: {
+          select: {
+            id: true,
+            fname: true,
+            oname: true,
+            lname: true,
+          },
+        },
+
+        shares: {
+          include: {
+            user: true,
+          },
+        },
+
+        reactions: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    if (!post) {
+      return NextResponse.json(
+        {
+          error: "Post not found",
+        },
+
+        {
+          status: 404,
+        },
+      );
     }
 
-    const avatar = await prisma.media.findFirst({
+    // ======================
+    // COMMENTS
+    // ======================
+
+    const comments = await prisma.comments.findMany({
+      where: {
+        post_id: id,
+      },
+
+      include: {
+        author: {
+          select: {
+            id: true,
+            fname: true,
+            oname: true,
+            lname: true,
+          },
+        },
+
+        reactions: {
+          include: {
+            user: true,
+          },
+        },
+      },
+
+      orderBy: {
+        created_at: "asc",
+      },
+    });
+
+    const commentIds = comments.map((c) => c.id);
+
+    const userIds = [
+      post.author.id,
+
+      ...comments.filter((c) => c.author).map((c) => c.author!.id),
+    ];
+
+    // ======================
+    // POST MEDIA
+    // ======================
+
+    const postMedia = await prisma.media.findMany({
+      where: {
+        entity_type: "post",
+
+        entity_id: id,
+      },
+    });
+
+    // ======================
+    // COMMENT MEDIA
+    // ======================
+
+    const commentMedia = await prisma.media.findMany({
+      where: {
+        entity_type: "comment",
+
+        entity_id: {
+          in: commentIds,
+        },
+      },
+    });
+
+    // ======================
+    // AVATARS
+    // ======================
+
+    const avatars = await prisma.media.findMany({
       where: {
         entity_type: "user",
-        entity_id: user.id,
+
+        entity_id: {
+          in: userIds,
+        },
+
         type: "avatar",
       },
+    });
 
-      select: {
-        id: true,
-        url: true,
-        type: true,
+    // ======================
+    // COMMENTS WITH MEDIA
+    // ======================
+
+    const commentsWithMedia = comments.map((comment) => {
+      const { reactions, ...rest } = comment;
+
+      return {
+        ...rest,
+
+        author: comment.author
+          ? {
+              ...comment.author,
+
+              avatar:
+                avatars.find((a) => a.entity_id === comment.author!.id)?.url ||
+                null,
+            }
+          : null,
+
+        media: commentMedia.filter((media) => media.entity_id === comment.id),
+
+        likes: reactions.filter((reaction) => reaction.type === "like"),
+
+        dislikes: reactions.filter((reaction) => reaction.type === "dislike"),
+      };
+    });
+
+    // ======================
+    // FINAL RESULT
+    // ======================
+
+    const { reactions, ...rest } = post;
+
+    const result = {
+      ...rest,
+
+      author: {
+        ...post.author,
+
+        avatar:
+          avatars.find((a) => a.entity_id === post.author.id)?.url || null,
       },
-    });
 
-    return NextResponse.json({ ...user, avatar: avatar || null });
-  } catch {
-    return NextResponse.json({ error: "Failed" }, { status: 500 });
-  }
-}
+      media: postMedia,
 
-export async function PUT(req: Request, { params }: any) {
-  try {
-    const { id } = await params;
+      comments: commentsWithMedia,
 
-    const body = await req.json();
+      likes: reactions.filter((reaction) => reaction.type === "like"),
 
-    const updated = await prisma.users.update({
-      where: { id: Number(id) },
-      data: body,
-    });
+      dislikes: reactions.filter((reaction) => reaction.type === "dislike"),
+    };
 
-    return NextResponse.json(updated);
-  } catch {
-    return NextResponse.json({ error: "Failed to update" }, { status: 500 });
-  }
-}
+    return NextResponse.json(result);
+  } catch (e) {
+    console.error(e);
 
-export async function DELETE(req: Request, { params }: any) {
-  try {
-    const { id } = await params;
+    return NextResponse.json(
+      {
+        error: "Failed to fetch post",
+      },
 
-    await prisma.users.delete({ where: { id: Number(id) } });
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
+      {
+        status: 500,
+      },
+    );
   }
 }

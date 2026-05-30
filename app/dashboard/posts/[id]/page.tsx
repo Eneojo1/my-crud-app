@@ -8,17 +8,17 @@ import { useEffect, useRef, useState } from "react";
 import Composer from "../composer";
 import Comment from "../comment";
 import Image from "next/image";
-import { FaShare } from "react-icons/fa";
 import { useBlog } from "@/shared/context/BlogContext";
+import Loading from "@/components/Loading";
+import { useReaction } from "@/hooks/useReaction";
+import { dataset } from "../dataset";
 
 const PostPage = () => {
   const [showComposer, setShowComposer] = useState(false);
   const params = useParams();
   const { posts } = useBlog();
-  const post = posts.find((post) => String(post.id) === params.id);
-  if (!post) return notFound();
-
   const bottomRef = useRef<HTMLDivElement | null>(null);
+
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   };
@@ -26,6 +26,23 @@ const PostPage = () => {
   useEffect(() => {
     if (showComposer) scrollToBottom();
   }, [showComposer]);
+
+  const post = posts.find((post) => String(post.id) === params.id);
+
+  const user = dataset.users.find((u) => u.id === 7);
+  const userId = user?.id;
+
+  const { likes, dislikes, isLiked, isDisliked, loading, toggleReaction } =
+    useReaction({
+      commentId: null,
+      postId: Number(post?.id),
+      initialLikes: post?.likes,
+      initialDislikes: post?.dislikes,
+      userId: user?.id ? Number(user.id) : null,
+    });
+
+  if (!posts.length) return <Loading />;
+  if (!post) return notFound();
 
   return (
     <div className="max-w-4xl mx-auto px-9 h-[calc(100vh-120px)] overflow-auto bg-se4">
@@ -58,12 +75,26 @@ const PostPage = () => {
       {/* Stats */}
       <div className={styles.stats}>
         <div className={styles.statsRow}>
-          <span className={styles.statItem}>
-            <ThumbsUp size={16} /> {post.likes?.length}
-          </span>
-          <span className={styles.statItem}>
-            <ThumbsDown size={16} /> {post.dislikes?.length}
-          </span>
+          <button
+            className={`flex gap-0.5 items-center ${isLiked ? "text-pr2" : ""}`}
+            onClick={() => toggleReaction("like")}
+          >
+            <ThumbsUp size={16} />
+            <span className="text-sm text-gray-500">
+              {formatNumber(likes.length)}
+            </span>
+          </button>
+
+          <button
+            onClick={() => toggleReaction("dislike")}
+            className={`flex gap-0.5 items-center ${
+              isDisliked ? "text-pr2" : ""
+            }`}
+          >
+            <ThumbsDown size={16} />
+
+            <span className="text-sm">{formatNumber(dislikes.length)}</span>
+          </button>
           <span
             className={styles.statItem}
             onClick={() => {
@@ -74,7 +105,7 @@ const PostPage = () => {
             <MessageSquare size={16} /> {post.comments?.length}
           </span>
           <span className={styles.statItem}>
-            <FaShare size={16} /> {post.shares?.length}
+            <Share2 size={16} /> {post.shares?.length}
           </span>
         </div>
       </div>
@@ -85,7 +116,9 @@ const PostPage = () => {
         Comments ({formatNumber(post.comments?.length || 0)})
       </p>
 
-      {post.comments?.map((node) => Comment({ node }))}
+      {post.comments?.map((node) => (
+        <Comment key={node.id} node={node} />
+      ))}
 
       {showComposer && (
         <div ref={bottomRef}>

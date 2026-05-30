@@ -29,7 +29,7 @@ CREATE TABLE `Posts` (
     `user_id` INTEGER NOT NULL,
     `category` VARCHAR(191) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
-    `text` VARCHAR(191) NOT NULL,
+    `text` LONGTEXT NOT NULL,
     `published` BOOLEAN NOT NULL DEFAULT false,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `Comments` (
     `guest` VARCHAR(191) NULL,
     `post_id` INTEGER NOT NULL,
     `parent_id` INTEGER NULL,
-    `comment` VARCHAR(191) NOT NULL,
+    `comment` LONGTEXT NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
